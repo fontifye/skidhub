@@ -58,7 +58,7 @@
     local concat = table.concat
 -- 
 
--- Lucide Icons (Molto provider, same as Obsidian)
+-- Lucide Icons (Molto provider)
     local LucideIcons = nil
     do
         local ok, mod = pcall(function()
@@ -553,6 +553,14 @@
                 ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
                 IgnoreGuiInset = true;
             }); 
+
+            library[ "cache" ] = library:create( "Frame" , {
+                Parent = library[ "items" ];
+                Name = "\0";
+                Visible = false;
+                BackgroundTransparency = 1;
+                Size = dim2(0, 0, 0, 0);
+            });
 
             local items = cfg.items; do
                 items[ "main" ] = library:create( "Frame" , {
