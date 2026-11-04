@@ -58,17 +58,18 @@
     local concat = table.concat
 -- 
 
--- Real Lucide Icons (Verified Asset IDs)
-    local LucideIcons = {
-        home = "rbxassetid://10709789505",
-        eye = "rbxassetid://10723415040",
-        crosshair = "rbxassetid://10734909847",
-        sliders = "rbxassetid://10734963400",
-        settings = "rbxassetid://10734926772",
-        info = "rbxassetid://10734912853",
-        folder = "rbxassetid://10709789505",
-        user = "rbxassetid://10723415040"
-    }
+-- Lucide Loader
+    local LucideIcons = nil
+    do
+        local ok, mod = pcall(function()
+            return (loadstring(game:HttpGet(
+                "https://raw.githubusercontent.com/notpoiu/lucide-roblox-direct/refs/heads/main/source.lua"
+            )) :: () -> any)()
+        end)
+        if ok and mod then
+            LucideIcons = mod
+        end
+    end
 
     local function resolve_icon(icon)
         if not icon then return "http://www.roblox.com/asset/?id=6034767608" end
@@ -78,8 +79,11 @@
         if type(icon) == "string" and (icon:match("^rbxassetid://") or icon:match("^rbxasset://") or icon:match("^rbxthumb://") or icon:match("^http")) then
             return icon
         end
-        if type(icon) == "string" and LucideIcons[icon] then
-            return LucideIcons[icon]
+        if LucideIcons then
+            local ok, asset = pcall(LucideIcons.GetAsset, icon)
+            if ok and asset and asset.Url then
+                return asset.Url
+            end
         end
         return "http://www.roblox.com/asset/?id=6034767608" 
     end
